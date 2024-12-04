@@ -3,7 +3,7 @@ mod solutions;
 use chrono;
 
 fn main() {
-    let today = chrono::Local::now().format("%d").to_string();
+    let today: String = chrono::Local::now().format("%d").to_string();
     let today: u8 = today.parse().unwrap();
     println!("Solving today's tasks: Day {}", today);
 

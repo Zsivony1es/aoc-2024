@@ -3,7 +3,6 @@ use std::collections::HashMap;
 use super::Solve;
 
 pub struct Day1 {
-    pub day: u8,
     pub input: String
 }
 

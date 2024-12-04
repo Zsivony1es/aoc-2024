@@ -1,9 +1,8 @@
 use super::Solve;
 
-use regex::{Match, Regex};
+use regex::Regex;
 
 pub struct Day3 {
-    pub day: u8,
     pub input: String
 }
 

@@ -14,9 +14,10 @@ fn read_input(day: &u8) -> String {
 
 pub fn get_solver(day: &u8) -> Box<dyn Solve> {
     match day {
-        1 => Box::new(day1::Day1{ day: day.clone(), input: read_input(day) }),
-        2 => Box::new(day2::Day2{ day: day.clone(), input: read_input(day) }),
-        3 => Box::new(day3::Day3{ day: day.clone(), input: read_input(day) }),
+        1 => Box::new(day1::Day1{ input: read_input(day) }),
+        2 => Box::new(day2::Day2{ input: read_input(day) }),
+        3 => Box::new(day3::Day3{ input: read_input(day) }),
+        4 => Box::new(day4::Day4{ input: read_input(day) }),
         _ => panic!("No solver for day {}", day),
     }
 }

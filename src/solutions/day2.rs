@@ -1,7 +1,6 @@
 use super::Solve;
 
 pub struct Day2 {
-    pub day: u8,
     pub input: String
 }
 
