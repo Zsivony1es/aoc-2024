@@ -13,3 +13,23 @@ impl Solve for Day15 {
         Ok(String::new())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_task_one() {
+        let input = "".to_string();
+        let day = Day15 { input };
+        assert_eq!(day.solve_task_one().unwrap(), "");
+    }
+
+    #[test]
+    fn test_task_two() {
+        let input = "".to_string();
+        let day = Day15 { input };
+        assert_eq!(day.solve_task_two().unwrap(), "");
+    }
+
+}
