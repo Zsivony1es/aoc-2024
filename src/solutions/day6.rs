@@ -15,88 +15,68 @@ impl Solve for Day6 {
     
     fn solve_task_two(&self) -> Result<String, &'static str> {
         let mut map = get_map(&self.input);
-        let mut time_loop_positions: Vec<[usize; 2]> = Vec::new();
+        let mut time_loop_positions: Vec<(usize, usize)> = Vec::new();
 
-        let row_count: usize = map.len();
-        let col_count: usize = map[0].len();
-
-        while move_guard(&mut map) {
-            let (i, j, dir) = get_guard_pos(&map);
-            match dir {
-                '>' => {
-                    if i + 1 < row_count && j + 1 < col_count &&
-                      map[i+1][j] == 'X' && 
-                      !time_loop_positions.contains(&[i,j+1]) {
-
-                        let mut loop_i = i;
-                        while loop_i + 1 < row_count && map[loop_i][j] == 'X' {
-                            loop_i += 1;
-                        }
-                        if loop_i + 1 >= row_count {
-                            continue;
-                        } else if (map[loop_i][j] == '#') {
-                            time_loop_positions.push([i,j+1]);
-                        }
-
+        loop {
+            let mut newmap = map.clone();
+            let obstacle_pos = place_obstacle_infront(&mut newmap);
+            if !time_loop_positions.contains(&obstacle_pos) { 
+                let mut count_moves = 0;
+                while move_guard(&mut newmap) {
+                    if count_moves > 10_000 {
+                        break;
                     }
-                },
-                'v' => {
-                    if j >= 1 && i + 1 < row_count &&
-                      map[i][j-1] == 'X' && 
-                      !time_loop_positions.contains(&[i+1,j]) {
-
-                        let mut loop_j: i32 = j as i32;
-                        while loop_j >= 0 && map[i][loop_j as usize] == 'X' {
-                            loop_j -= 1;
-                        }
-                        if loop_j < 0 {
-                            continue;
-                        } else if map[i][(loop_j + 1) as usize] == '#' {
-                            time_loop_positions.push([i+1,j]);
-                        }
-
-                    }
-                },
-                '<' => {
-                    if i >= 1 && j >= 1  &&
-                      map[i-1][j] == 'X' && 
-                      !time_loop_positions.contains(&[i,j-1]) {
-
-                        let mut loop_i: i32 = i as i32;
-                        while loop_i - 1 >= 0 && map[loop_i as usize][j] == 'X' {
-                            loop_i -= 1;
-                        }
-                        if loop_i < 0 {
-                            continue;
-                        } else if map[(loop_i + 1) as usize][j] == '#' {
-                            time_loop_positions.push([i,j+1]);
-                        } 
-                    }
-                },
-                '^' => {
-                    if i >= 1 && j + 1 < col_count  &&
-                      map[i][j+1] == 'X' && 
-                      !time_loop_positions.contains(&[i-1,j]) {
-                        
-                        let mut loop_j = j;
-                        while loop_j + 1 < col_count && map[i][loop_j] == 'X' {
-                            loop_j += 1;
-                        }
-                        if loop_j + 1 >= col_count {
-                            continue;
-                        } else if map[i][loop_j] == '#' {
-                            time_loop_positions.push([i+1,j]);
-                        }
-
-                    }
-                },
-                _ => ()
+                    count_moves += 1;
+                };
+                if count_moves > 10_000 && obstacle_pos != (999, 999) {
+                    time_loop_positions.push(obstacle_pos);
+                    println!("Time loop position: ({}, {})", obstacle_pos.0, obstacle_pos.1);
+                }
             }
-        }
 
-        println!("{:?}", time_loop_positions);
+            if !move_guard(&mut map) {break;};
+        };
 
         Ok(time_loop_positions.len().to_string())
+    }
+}
+
+fn place_obstacle_infront(map: &mut Vec<Vec<char>>) -> (usize, usize) {
+    let (i, j, dir) = get_guard_pos(&map);
+
+    let row_count: usize = map.len();
+    let col_count: usize = map[0].len();
+
+    match dir {
+        '>' => {
+            if j + 1 >= col_count {
+                return (999, 999);
+            }
+            map[i][j+1] = '#';
+            (i, j+1)
+        }
+        '<' => {
+            if j == 0 {
+                return (999, 999);
+            }
+            map[i][j-1] = '#';
+            (i, j-1)
+        }
+        'v' => {
+            if i + 1 >= row_count {
+                return (999, 999);
+            }
+            map[i+1][j] = '#';
+            (i+1, j)
+        }
+        '^' => {
+            if i == 0 {
+                return (999, 999);
+            }
+            map[i-1][j] = '#';
+            (i-1, j)
+        }
+        _ => panic!("Invalid direction!")
     }
 }
 
