@@ -5,7 +5,7 @@ use chrono;
 fn main() {
     let today: String = chrono::Local::now().format("%d").to_string();
     let today: u8 = today.parse().unwrap();
-    let today = 6;
+    let today = 9;
     println!("Solving today's tasks: Day {}", today);
 
     let solver = solutions::get_solver(&today);
